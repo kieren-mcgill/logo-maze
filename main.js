@@ -62,7 +62,7 @@ function checkIfCollide(accelX, accelY) {
         const yCoordinate = (ball.centerY + accelY) + (ball.radius) * Math.sin(angle * (Math.PI / 180));
         const checkColour = ctx.getImageData(xCoordinate - 0.5, yCoordinate - 0.5, 1, 1).data.slice(0, 3);
         if (checkColour.every((value) => value < 50)) {
-            return true;
+            return {x: xCoordinate, y: yCoordinate}
         }
     }
     return false;
@@ -86,7 +86,10 @@ function getAccel() {
                 accelY = Math.min(maxAccel, Math.max(minAccel, accelY));
 
                 const willCollide = checkIfCollide(accelX, accelY);
-                if (!willCollide) {
+                if (willCollide) {
+                    ball.centerX += accelX - ((willCollide.x / ball.radius) * accelX);
+                    ball.centerY += accelY - ((willCollide.y / ball.radius) * accelY);
+                } else {
                     ball.centerX += accelX;
                     ball.centerY += accelY;
                 }
