@@ -70,7 +70,7 @@ function checkIfCollide(accelX, accelY) {
 
 function getAccel() {
     ball.centerX = canvas.width / 2;
-    ball.centerY = canvas.height -50;
+    ball.centerY = canvas.height - 50;
     const XScalingFactor = 2;
     const YScalingFactor = 4;
     const maxAccel = 4;
@@ -87,8 +87,24 @@ function getAccel() {
 
                 const willCollide = checkIfCollide(accelX, accelY);
                 if (willCollide) {
-                    ball.centerX += accelX - ((willCollide.x / ball.radius) * accelX);
-                    ball.centerY += accelY + ((willCollide.y / ball.radius) * accelY);
+                    // Calculate the displacement vector between the ball's center and the collision point
+                    const dx = willCollide.x - ball.centerX;
+                    const dy = willCollide.y - ball.centerY;
+
+                    // Calculate the dot product of the velocity vector and the displacement vector
+                    const dotProduct = accelX * dx + accelY * dy;
+
+                    // Calculate the projection of the velocity vector onto the displacement vector
+                    const projX = dotProduct / (dx * dx + dy * dy) * dx;
+                    const projY = dotProduct / (dx * dx + dy * dy) * dy;
+
+                    // Calculate the perpendicular component of the velocity vector
+                    const perpX = accelX - projX;
+                    const perpY = accelY - projY;
+
+                    // Update the ball's position based on the perpendicular component
+                    ball.centerX += perpX;
+                    ball.centerY += perpY;
                 } else {
                     ball.centerX += accelX;
                     ball.centerY += accelY;
