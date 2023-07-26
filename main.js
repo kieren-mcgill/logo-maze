@@ -88,7 +88,7 @@ function getAccel() {
                 const willCollide = checkIfCollide(accelX, accelY);
                 if (willCollide) {
                     ball.centerX += accelX - ((willCollide.x / ball.radius) * accelX);
-                    ball.centerY += accelY - ((willCollide.y / ball.radius) * accelY);
+                    ball.centerY += accelY + ((willCollide.y / ball.radius) * accelY);
                 } else {
                     ball.centerX += accelX;
                     ball.centerY += accelY;
