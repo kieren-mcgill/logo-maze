@@ -1,10 +1,9 @@
-
 const canvas = document.getElementById('myCanvas');
 const ctx = canvas.getContext('2d');
 
 const ball = {
     centerX: canvas.width / 2,
-    centerY: canvas.height -50,
+    centerY: canvas.height - 50,
     radius: 10,
     fillColor: 'red',
 };
@@ -57,12 +56,20 @@ img.onload = function () {
 }
 
 function checkIfCollide(accelX, accelY) {
-    for (let angle = 0; angle < 360; angle += 10) {
+    let sumX = 0;
+    let sumY = 0;
+    let pixelCount = 0;
+    for (let angle = 0; angle < 360; angle += 5) {
         const xCoordinate = (ball.centerX + accelX) + (ball.radius) * Math.cos(angle * (Math.PI / 180));
         const yCoordinate = (ball.centerY + accelY) + (ball.radius) * Math.sin(angle * (Math.PI / 180));
         const checkColour = ctx.getImageData(xCoordinate - 0.5, yCoordinate - 0.5, 1, 1).data.slice(0, 3);
         if (checkColour.every((value) => value < 50)) {
-            return {x: xCoordinate, y: yCoordinate}
+            sumX += xCoordinate;
+            sumY += yCoordinate;
+            pixelCount += 1;
+        }
+        if (pixelCount > 0) {
+            return {x: sumX / pixelCount, y: sumY / pixelCount};
         }
     }
     return false;
@@ -114,4 +121,5 @@ function getAccel() {
         }
     });
 }
+
 drawMaze();
